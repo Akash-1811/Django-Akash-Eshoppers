@@ -1,0 +1,179 @@
+<!doctype html>
+{% load static %}
+{% load cart %}
+{% load custom_filter %}
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+    <title>Hello, world!</title>
+    <style media="screen">
+
+
+
+    .navbar{
+      background-color: #E52B50; linear-gradient(315deg, #E52B50 0%, #FEAE96 74%);
+      color:black;
+    }
+
+
+
+    </style>
+  </head>
+  <body>
+
+
+
+    <!--NAV BAR -->
+    <nav class="navbar navbar-expand-lg ">
+      <div class="container-fluid">
+        <a class="navbar-brand text-dark" href="/main/index">E-Shoppers</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active text-dark" aria-current="page" href="#">Store</a>
+            </li>
+          </ul>
+
+         {% if request.session.customer_id %}
+
+         <ul class="navbar-nav my-2 my-lg-0">
+           <li class="nav-item">
+             <a class="nav-link text-dark" aria-current="page" href="/main/cart">Cart <i class="bi bi-cart4"></i></a>
+           </li>
+         </ul>
+
+         <ul class="navbar-nav my-2 my-lg-0">
+           <li class="nav-item">
+             <a class="nav-link text-dark" aria-current="page" href="/main/orders">Orders</a>
+           </li>
+         </ul>
+
+          <ul class="navbar-nav my-2 my-lg-0">
+            <li class="nav-item">
+              <a class="nav-link text-dark" aria-current="page" href="/main/logout">Logout</a>
+            </li>
+          </ul>
+
+
+        {% else %}
+
+        <ul class="navbar-nav my-2 my-lg-0">
+          <li class="nav-item">
+            <a class="nav-link text-dark" aria-current="page" href="/main/cart">Cart <i class="bi bi-cart4">&nbsp<span class="badge bg-light text-dark">{{request.session.cart.keys|length}}</span></i></a>
+          </li>
+        </ul>
+
+          <ul class="navbar-nav my-2 my-lg-0">
+            <li class="nav-item">
+              <a class="nav-link text-dark" aria-current="page" href="/main/login">Login</a>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav my-2 my-lg-0">
+            <li class="nav-item">
+              <a class="nav-link text-dark" aria-current="page" href="/main/signup">SignUp</a>
+            </li>
+          </ul>
+
+        {% endif %}
+
+
+
+
+
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary text-dark" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+
+<!-- cart -->
+<div class="container">
+  <div class="border rouded p-4 m-4">
+    <p class="display-4 pl-4 ml-4">Your Orders</p>
+    <hr>
+
+    <table class="table">
+<thead>
+  <tr>
+    <th scope="col">Sr.No</th>
+    <th scope="col">Image</th>
+    <th scope="col">Name</th>
+    <th scope="col">Date</th>
+    <th scope="col">Price</th>
+    <th scope="col">Quantity</th>
+    <th scope="col">Total</th>
+    <th scope="col">Order Status</th>
+
+  </tr>
+</thead>
+<tbody>
+  {% for order in order %}
+  <tr>
+
+    <td>{{forloop.counter}}</td>
+    <td><img style="height:80px;" class="rounded-circle" src="{{order.product.image.url}}" alt=""></td>
+    <td>{{order.product.name}}</td>
+    <td>{{order.date}}</td>
+    <td>{{order.price|currency}}</td>
+    <td>{{order.quantity}}</td>
+    <td>{{order.quantity|multiply:order.price|currency}}</td>
+    {% if order.status %}
+    <td><small class="badge bg-success text-dark">Completed</small></td>
+    {% else %}
+    <td><small class="badge bg-warning text-dark">Pending</small></td>
+    {% endif %}
+
+  </tr>
+  {% endfor %}
+
+
+</tbody>
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+</div>
+
+
+<div class="container-fluid feet">
+  <footer class="py-3 my-4">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="/main/index" class="nav-link px-2 text-muted">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Feature</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+    </ul>
+    <p class="text-center text-muted">© 2022 E-Shoppers, Inc</p>
+  </footer>
+</div>
